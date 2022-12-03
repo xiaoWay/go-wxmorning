@@ -21,9 +21,9 @@
 
 
 
-第二步填写config.json
+第二步填写config.json 
 
-``
+
 
 ```json
 {
