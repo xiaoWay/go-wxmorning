@@ -1,5 +1,5 @@
 # 微信测试号——给女朋友的每日早安提醒
-每天早上给女朋友发个早安提醒。男码友专属示爱神奇////
+每天早上给女朋友发个早安提醒。男码友专属示爱神器
 欢迎issue和clone
 本程序基于golang开发，使用了[silenceper/wechat/v2](https://github.com/silenceper/wechat) go sdk工具包，百度天气Api，彩虹屁Api，每日一言Api
 
