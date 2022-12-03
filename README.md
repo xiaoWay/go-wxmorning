@@ -50,4 +50,7 @@
 
 第三步：build然后运行，大功完成 **编译好的exe要和config.json放在一起**
 
-`go build main.go`
+```go
+    go build main.go
+```
+
