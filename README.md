@@ -9,6 +9,8 @@
 
 ![image-20221203184324368](readmefiles/1670064199037.png)
 
+------
+
 ### 第一步
 
 到[微信测试号](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)接口申请一个账号，扫码登录就可以获取，可以得到appID，appsecret的信息
