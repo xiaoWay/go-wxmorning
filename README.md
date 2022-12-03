@@ -66,7 +66,7 @@
 
 模板内容：
 
-```json
+```
 {{riqi.DATA}}  
 
 {{beizhu.DATA}}
