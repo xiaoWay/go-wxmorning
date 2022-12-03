@@ -18,8 +18,6 @@ type Config struct {
 	WechatOfficial WechatOfficial `json:"wechat_official"`
 	Baidutianqi    Baidutianqi    `json:"baidutianqi"`
 	CaiHongPiKey   string         `json:"caihongpikey"`
-
-	Colors Colors `json:"colors"`
 }
 
 // WechatOfficial 微信公众号配置
@@ -36,21 +34,15 @@ type Baidutianqi struct {
 	DistrictId string `json:"district_id"`
 }
 
-type Colors struct {
-	Qinghua string `json:"qinghua"`
-}
-
-var DefaultConfig = &Config{
-	Colors: Colors{
-		Qinghua: "#550038",
-	},
-}
+// 输出的默认配置
+var DefaultConfig = &Config{}
 
 // 获取恋爱多少天
 func (c *Config) GetLoverDay() int {
 	return int(time.Now().Sub(c.LoveStartTime).Hours() / 24.0)
 }
 
+// 获取当前时间
 func getCurrentDate() time.Time {
 	nowStr := time.Now().Format("2006-01-02")
 	now, _ := time.Parse("2006-01-02", nowStr)
@@ -72,19 +64,19 @@ func (c *Config) GetBirthDay() int {
 
 // 配置自检
 func Parse() {
-	configBytes, err := ioutil.ReadFile("./config_local.json")
+	configBytes, err := ioutil.ReadFile("./config.json") //读jason 配置
 	if err != nil {
-		configBytes, err = ioutil.ReadFile("./config.json")
-		if err != nil {
-			log.Panicf("解析配置文件出错 err: %s", err.Error())
-		}
+		log.Panicf("解析配置文件出错 err: %s", err.Error()) //读不到返回配置错误信息
 	}
+	//反解config json
 	if err := json.Unmarshal(configBytes, DefaultConfig); err != nil {
 		log.Panicf("解析配置文件 Unmarshal 出错  err: %s", err.Error())
 	}
+	// init后输出计算恋爱日的函数
 	if DefaultConfig.LoveStartTime, err = time.Parse("2006-01-02", DefaultConfig.LoveStartDate); err != nil {
 		log.Panicf("解析配置文件 love_start_date 出错  err: %s", err.Error())
 	}
+	// init后输出计算生日的函数
 	if DefaultConfig.BirthTime, err = time.Parse("01-02", DefaultConfig.BirthDate); err != nil {
 		log.Panicf("解析配置文件 birth_date 出错  err: %s", err.Error())
 	}

@@ -28,12 +28,14 @@ func init() {
 
 	config.Parse()
 
+	//sdk 配置api通信 cache保存
 	official = wechat.NewWechat().GetOfficialAccount(&officialConfig.Config{
 		AppID:     config.DefaultConfig.WechatOfficial.AppID,
 		AppSecret: config.DefaultConfig.WechatOfficial.AppSecret,
 		Cache:     cache.NewMemory(),
 	})
 
+	//如果为test模式发送一条 就推迟os
 	if config.DefaultConfig.Mod == "test" {
 		log.Println("当前是测试模式，将立即发送一条消息并退出，如需定时发送请将 mod 值改为其他任意值，只要不是 test 就行")
 		sendTemplateMessage()
@@ -55,11 +57,11 @@ func sendTemplateMessage() {
 
 	// {{caihongpi.DATA}}彩虹屁
 	// {{jinju.DATA}} 金句
-	text, low, high := getWeather()
+	text, low, high := getWeather() //天气，最低温度，最高温度
 	now := time.Now()
 	day := now.Format("2006-01-02")
 	weekday := time.Now().Weekday()
-	riqi := fmt.Sprintf("%s %s", day, weekday)
+	riqi := fmt.Sprintf("%s %s", day, weekday) // yyyy-mm-dd weekday
 	for _, openId := range config.DefaultConfig.WechatOfficial.OpenIds {
 		msg := &message.TemplateMessage{
 			ToUser:     openId,
@@ -80,7 +82,9 @@ func sendTemplateMessage() {
 		if err != nil {
 			log.Printf("发送模版消息失败 openId=[%s] err:%s\n", openId, err.Error())
 		}
-		fmt.Printf("%v", msg)
+		fmt.Printf("%v", msg) //后台输出函数，打印面板
+		//懒 现在输出的是msg的地址 如果想要好的输出那就解析一下map就好了，然后对每个地址求值输出
+		//我直接一股脑输出
 	}
 }
 
@@ -118,7 +122,7 @@ func getCaiHongPi() string {
 
 // 随机颜色函数设置
 func randomcolor() string {
-	colorArr := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"}
+	colorArr := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"} //基础16进制串
 	rand.Seed(time.Now().UnixNano())
 	c := ""
 	for i := 0; i < 6; i++ {
