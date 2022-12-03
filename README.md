@@ -9,7 +9,9 @@
 
 ![image-20221203184324368](readmefiles/1670064199037.png)
 
-第一步到[微信测试号](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)接口申请一个账号，扫码登录就可以获取，可以得到appID，appsecret的信息
+### 第一步
+
+到[微信测试号](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)接口申请一个账号，扫码登录就可以获取，可以得到appID，appsecret的信息
 
 
 
@@ -19,11 +21,13 @@
 
 天气接口使用的是[百度天气](https://lbsyun.baidu.com/index.php?title=webapi/weather)，需要获取api的ak和女朋友所在地区的district_id：一般为当地的身份证前六位
 
+------
 
 
-第二步填写config.json 
 
+### 第二步
 
+填写config.json 
 
 ```json
 {
@@ -50,9 +54,39 @@
 }
 ```
 
+------
 
 
-第三步：build然后运行，大功完成 **编译好的exe要和config.json放在一起**
+
+### 第三步
+
+填写在微信测试号官网模板信息
+
+![image-20221203203142390](readmefiles\1670070683032.png)
+
+模板内容：
+
+```json
+{{riqi.DATA}}  
+
+{{beizhu.DATA}}
+天气：{{tianqi.DATA}}
+最低温度：{{low.DATA}} 度
+最高温度：{{high.DATA}} 度
+今天是我们恋爱的第 {{lianai.DATA}} 天
+距离你的生日还有 {{shengri.DATA}} 天
+{{caihongpi.DATA}} 
+
+{{jinju.DATA}}
+```
+
+------
+
+
+
+### 第四步
+
+build然后运行，大功完成   **编译好的exe要和config.json要放在一起**
 
 ```go
     go build main.go
