@@ -1,5 +1,6 @@
 package main
 
+//使用了
 import (
 	"fmt"
 	"github.com/robfig/cron/v3"
@@ -43,6 +44,7 @@ func init() {
 var cronEntryId cron.EntryID
 
 func sendTemplateMessage() {
+	//模板消息设置
 	// data: {{riqi.DATA}} //2022-11-21 星期一
 	// beizhu {{beizhu.DATA}}
 	// weather 天气：{{tianqi.DATA}}} //晴
@@ -98,7 +100,7 @@ func main() {
 	select {}
 }
 
-// caiHongPi
+// caiHongPi 使用彩虹屁api接口
 func getCaiHongPi() string {
 	url := fmt.Sprintf("http://api.tianapi.com/caihongpi/index?key=%s", config.DefaultConfig.CaiHongPiKey)
 	resp, err := http.Get(url)
@@ -114,6 +116,7 @@ func getCaiHongPi() string {
 	return gjson.GetBytes(data, "newslist.0.content").String()
 }
 
+// 随机颜色函数设置
 func randomcolor() string {
 	colorArr := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"}
 	rand.Seed(time.Now().UnixNano())
@@ -125,7 +128,7 @@ func randomcolor() string {
 
 }
 
-// baidutianqi
+// baidutianqi 使用百度天气api
 func getWeather() (text string, low string, high string) {
 	url := fmt.Sprintf("https://api.map.baidu.com/weather/v1/?district_id=%s&data_type=all&ak=%s", config.DefaultConfig.Baidutianqi.DistrictId, config.DefaultConfig.Baidutianqi.Ak)
 	resp, err := http.Get(url)
@@ -149,6 +152,7 @@ func getWeather() (text string, low string, high string) {
 	return text, low, high
 }
 
+// 金山词霸每日一句api 使用
 func getJinju() string {
 	url := fmt.Sprintf("http://open.iciba.com/dsapi/")
 	resp, err := http.Get(url)
