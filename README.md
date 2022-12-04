@@ -7,7 +7,7 @@
 
 效果如下：
 
-![image-20221203184324368](readmefiles/1670064199037.png)
+![show](http://qiniu.xiaoway.cc/wxmorning/show.png)
 
 ### 第一步
 
@@ -62,7 +62,7 @@
 
 填写在微信测试号官网模板信息
 
-![image-20221203203142390](readmefiles\1670070683032.png)
+![template](http://qiniu.xiaoway.cc/wxmorning/template.png)
 
 模板内容：
 
