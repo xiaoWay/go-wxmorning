@@ -1,12 +1,13 @@
 {
-  "mod": "",
+  "mod": "production",
   "cron": "30 7 * * *",
-  "love_start_date": "2022-02-11",
-  "birth_date": "05-06",
+  "love_day": "2022-02-11",
+  "birth_day": "05-06",
   "wechat_official": {
     "app_id": "",
     "app_secret": "",
     "open_ids": [
+      "",
       ""
     ],
     "template_id": ""
@@ -14,9 +15,6 @@
   "baidutianqi": {
     "ak": "",
     "district_id": ""
-  },
-  "colors": {
-    "qinghua": "#550038"
   },
   "caihongpikey": ""
 }

@@ -26,17 +26,16 @@ func init() {
 	var cstZone = time.FixedZone("CST", 8*3600) //UTC-8
 	time.Local = cstZone
 
-	config.Parse()
-
+	//config.Getconfig()
 	//sdk 配置api通信 cache保存
 	official = wechat.NewWechat().GetOfficialAccount(&officialConfig.Config{
-		AppID:     config.DefaultConfig.WechatOfficial.AppID,
-		AppSecret: config.DefaultConfig.WechatOfficial.AppSecret,
+		AppID:     config.AppConfig.WechatOfficial.AppID,
+		AppSecret: config.AppConfig.WechatOfficial.AppSecret,
 		Cache:     cache.NewMemory(),
 	})
 
 	//如果为test模式发送一条 就推迟os
-	if config.DefaultConfig.Mod == "test" {
+	if config.AppConfig.Mod == "test" {
 		log.Println("当前是测试模式，将立即发送一条消息并退出，如需定时发送请将 mod 值改为其他任意值，只要不是 test 就行")
 		sendTemplateMessage()
 		os.Exit(0)
@@ -62,17 +61,17 @@ func sendTemplateMessage() {
 	day := now.Format("2006-01-02")
 	weekday := time.Now().Weekday()
 	riqi := fmt.Sprintf("%s %s", day, weekday) // yyyy-mm-dd weekday
-	for _, openId := range config.DefaultConfig.WechatOfficial.OpenIds {
+	for _, openId := range config.AppConfig.WechatOfficial.OpenIds {
 		msg := &message.TemplateMessage{
 			ToUser:     openId,
-			TemplateID: config.DefaultConfig.WechatOfficial.TemplateID,
+			TemplateID: config.AppConfig.WechatOfficial.TemplateID,
 			Data: map[string]*message.TemplateDataItem{
 				"riqi":      {Value: riqi, Color: randomcolor()},
 				"tianqi":    {Value: text, Color: randomcolor()},
 				"low":       {Value: low, Color: randomcolor()},
 				"high":      {Value: high, Color: randomcolor()},
-				"lianai":    {Value: fmt.Sprintf("%d", config.DefaultConfig.GetLoverDay()), Color: randomcolor()},
-				"shengri":   {Value: fmt.Sprintf("%d", config.DefaultConfig.GetBirthDay()), Color: randomcolor()},
+				"lianai":    {Value: fmt.Sprintf("%d", getLoverDay()), Color: randomcolor()},
+				"shengri":   {Value: fmt.Sprintf("%d", getBirthDay()), Color: randomcolor()},
 				"caihongpi": {Value: fmt.Sprintf("%s\n", getCaiHongPi()), Color: randomcolor()},
 				"jinju":     {Value: getJinju(), Color: randomcolor()},
 			},
@@ -82,7 +81,8 @@ func sendTemplateMessage() {
 		if err != nil {
 			log.Printf("发送模版消息失败 openId=[%s] err:%s\n", openId, err.Error())
 		}
-		fmt.Printf("%v", msg) //后台输出函数，打印面板
+		fmt.Println(msg) //后台输出函数，打印面板
+		//fmt.Println("222")
 		//懒 现在输出的是msg的地址 如果想要好的输出那就解析一下map就好了，然后对每个地址求值输出
 		//我直接一股脑输出
 	}
@@ -91,7 +91,7 @@ func sendTemplateMessage() {
 func main() {
 	c := cron.New()
 	var err error
-	cronEntryId, err = c.AddFunc(config.DefaultConfig.Cron, func() {
+	cronEntryId, err = c.AddFunc(config.AppConfig.Cron, func() {
 		sendTemplateMessage()
 		log.Println("执行成功, 下次执行时间是", c.Entry(cronEntryId).Next.String())
 	})
@@ -104,9 +104,17 @@ func main() {
 	select {}
 }
 
+/*
+方法区
+func
+func
+方法区
+*/
+// caiHongPi 使用彩虹屁api接口
+
 // caiHongPi 使用彩虹屁api接口
 func getCaiHongPi() string {
-	url := fmt.Sprintf("http://api.tianapi.com/caihongpi/index?key=%s", config.DefaultConfig.CaiHongPiKey)
+	url := fmt.Sprintf("http://api.tianapi.com/caihongpi/index?key=%s", config.AppConfig.CaiHongPiKey)
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -134,7 +142,7 @@ func randomcolor() string {
 
 // baidutianqi 使用百度天气api
 func getWeather() (text string, low string, high string) {
-	url := fmt.Sprintf("https://api.map.baidu.com/weather/v1/?district_id=%s&data_type=all&ak=%s", config.DefaultConfig.Baidutianqi.DistrictId, config.DefaultConfig.Baidutianqi.Ak)
+	url := fmt.Sprintf("https://api.map.baidu.com/weather/v1/?district_id=%s&data_type=all&ak=%s", config.AppConfig.Baidutianqi.DistrictId, config.AppConfig.Baidutianqi.Ak)
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Println("获取天气消息失败 err:", err.Error())
@@ -172,4 +180,33 @@ func getJinju() string {
 	content := gjson.GetBytes(data, "content").String()
 	note := gjson.GetBytes(data, "note").String()
 	return fmt.Sprintf("%s \n %s", content, note)
+}
+
+// 获取恋爱多少天
+func getLoverDay() int {
+	c, err := time.Parse("2006-01-02", config.AppConfig.LoveDay)
+	if err != nil {
+		log.Panicf("parse error: %v", err)
+	}
+	return int(time.Now().Sub(c).Hours() / 24.0)
+}
+
+// 获取当前时间
+func getCurrentDate() time.Time {
+	nowStr := time.Now().Format("2006-01-02")
+	now, _ := time.Parse("2006-01-02", nowStr)
+	return now
+}
+
+// 判断还有多少天生日
+func getBirthDay() int {
+	birth, err := time.Parse("2006-01-02", fmt.Sprintf("%d-%s", getCurrentDate().Year(), config.AppConfig.BirthDay))
+	if err != nil {
+		log.Println("GetBirthDay 错误", birth)
+		return -1111
+	}
+	if getCurrentDate().Sub(birth) > 0 {
+		birth, _ = time.Parse("2006-01-02", fmt.Sprintf("%d-%s", getCurrentDate().Year()+1, config.AppConfig.BirthDay))
+	}
+	return int(birth.Sub(getCurrentDate()).Hours() / 24.0)
 }
