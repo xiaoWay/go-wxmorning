@@ -28,8 +28,8 @@
 {
   "mod": "",  //test为测试模式发送一条消息即关闭，prod为生产模式
   "cron": "30 7 * * *", //定时开启任务 每天的7：30
-  "love_start_date": "xxxx-xx-xx",  //恋爱开始的日子 yyyy-mm-dd
-  "birth_date": "xx-xx",  //生日的月 日  yy-dd
+  "love_day": "xxxx-xx-xx",  //恋爱开始的日子 yyyy-mm-dd
+  "birth_day": "xx-xx",  //生日的月 日  yy-dd
   "wechat_official": {
     "app_id": "",   //自己的appid
     "app_secret": "",  //自己的secretid
@@ -42,10 +42,7 @@
     "ak": "", "" //百度天气ak
     "district_id": ""  //所在地区district_id
   },
-  "colors": {
-    "qinghua": "#550038" //默认颜色
-  },
-  "caihongpikey": "" //彩虹皮key
+  "caihongpikey": "" //彩虹屁key
 }
 ```
 
