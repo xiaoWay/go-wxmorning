@@ -130,14 +130,12 @@ func getCaiHongPi() string {
 
 // 随机颜色函数设置
 func randomcolor() string {
-	colorArr := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"} //基础16进制串
 	rand.Seed(time.Now().UnixNano())
-	c := ""
-	for i := 0; i < 6; i++ {
-		c = c + colorArr[rand.Intn(16)]
-	}
-	return "#" + c
-
+	R := uint8(rand.Intn(255))
+	G := uint8(rand.Intn(255))
+	B := uint8(rand.Intn(255))
+	color := fmt.Sprintf("#%02x%02x%02x", R, G, B)
+	return color
 }
 
 // baidutianqi 使用百度天气api
