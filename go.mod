@@ -1,4 +1,4 @@
-module gomoring
+module github.com/xiaoWay/go-wxmoring
 
 go 1.19
 
