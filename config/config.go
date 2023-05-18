@@ -7,21 +7,20 @@ import (
 )
 
 type Config struct {
-	Mod            string         `json:"mod"`
-	Cron           string         `json:"cron"`
-	LoveDay        string         `json:"love_day"`
-	BirthDay       string         `json:"birth_day"`
-	WechatOfficial WechatOfficial `json:"wechat_official"`
-	Baidutianqi    Baidutianqi    `json:"baidutianqi"`
-	CaiHongPiKey   string         `json:"caihongpikey"`
+	Mod          string      `json:"mod"`
+	Cron         string      `json:"cron"`
+	LoveDay      string      `json:"love_day"`
+	BirthDay     string      `json:"birth_day"`
+	WxPusher     WxPusher    `json:"wx_pusher"`
+	Baidutianqi  Baidutianqi `json:"baidutianqi"`
+	CaiHongPiKey string      `json:"caihongpikey"`
 }
 
-// WechatOfficial 微信公众号配置
-type WechatOfficial struct {
-	AppID      string   `json:"app_id"`      // appid
-	AppSecret  string   `json:"app_secret"`  // appsecret
-	OpenIds    []string `json:"open_ids"`    // 要接受消息的人
-	TemplateID string   `json:"template_id"` // 必须, 模版ID
+type WxPusher struct {
+	AppToken    string   `json:"app_token"`    // apptoken
+	Uids        []string `json:"uids"`         // 发送用户的Uid
+	ContentType int      `json:"content_type"` // 1表示文字  2表示html(只发送body标签内部的数据即可，不包括body标签) 3表示markdown
+	Summary     string   `json:"summary"`
 }
 
 // baidutianqi 百度天气配置

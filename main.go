@@ -4,13 +4,8 @@ package main
 import (
 	"fmt"
 	"github.com/robfig/cron/v3"
-	"github.com/silenceper/wechat/v2"
-	"github.com/silenceper/wechat/v2/cache"
-	"github.com/silenceper/wechat/v2/officialaccount"
-	officialConfig "github.com/silenceper/wechat/v2/officialaccount/config"
-	"github.com/silenceper/wechat/v2/officialaccount/message"
 	"github.com/tidwall/gjson"
-	"gomoring/config"
+	"github.com/xiaoWay/go-wxmoring/config"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -19,72 +14,18 @@ import (
 	"time"
 )
 
-var official *officialaccount.OfficialAccount
+var cronEntryId cron.EntryID
 
 func init() {
 	//设置时区
 	var cstZone = time.FixedZone("CST", 8*3600) //UTC-8
 	time.Local = cstZone
 
-	//config.Getconfig()
-	//sdk 配置api通信 cache保存
-	official = wechat.NewWechat().GetOfficialAccount(&officialConfig.Config{
-		AppID:     config.AppConfig.WechatOfficial.AppID,
-		AppSecret: config.AppConfig.WechatOfficial.AppSecret,
-		Cache:     cache.NewMemory(),
-	})
-
 	//如果为test模式发送一条 就推迟os
 	if config.AppConfig.Mod == "test" {
 		log.Println("当前是测试模式，将立即发送一条消息并退出，如需定时发送请将 mod 值改为其他任意值，只要不是 test 就行")
-		sendTemplateMessage()
+		sendTemplateMessage(createMsg())
 		os.Exit(0)
-	}
-}
-
-var cronEntryId cron.EntryID
-
-func sendTemplateMessage() {
-	//模板消息设置
-	// data: {{riqi.DATA}} //2022-11-21 星期一
-	// beizhu {{beizhu.DATA}}
-	// weather 天气：{{tianqi.DATA}}} //晴
-	// low 最低温度：{{low.DATA}} 度 //17
-	// high 最高温度：{{high.DATA}} 度 //25
-	// 今天是我们恋爱的第 {{lianai.DATA}}天 // 250
-	// 距离你的生日还有{{shengri.DATA}}天// 251
-
-	// {{caihongpi.DATA}}彩虹屁
-	// {{jinju.DATA}} 金句
-	text, low, high := getWeather() //天气，最低温度，最高温度
-	now := time.Now()
-	day := now.Format("2006-01-02")
-	weekday := time.Now().Weekday()
-	riqi := fmt.Sprintf("%s %s", day, weekday) // yyyy-mm-dd weekday
-	for _, openId := range config.AppConfig.WechatOfficial.OpenIds {
-		msg := &message.TemplateMessage{
-			ToUser:     openId,
-			TemplateID: config.AppConfig.WechatOfficial.TemplateID,
-			Data: map[string]*message.TemplateDataItem{
-				"riqi":      {Value: riqi, Color: randomcolor()},
-				"tianqi":    {Value: text, Color: randomcolor()},
-				"low":       {Value: low, Color: randomcolor()},
-				"high":      {Value: high, Color: randomcolor()},
-				"lianai":    {Value: fmt.Sprintf("%d", getLoverDay()), Color: randomcolor()},
-				"shengri":   {Value: fmt.Sprintf("%d", getBirthDay()), Color: randomcolor()},
-				"caihongpi": {Value: fmt.Sprintf("%s\n", getCaiHongPi()), Color: randomcolor()},
-				"jinju":     {Value: getJinju(), Color: randomcolor()},
-			},
-		}
-		_, err := official.GetTemplate().Send(msg)
-
-		if err != nil {
-			log.Printf("发送模版消息失败 openId=[%s] err:%s\n", openId, err.Error())
-		}
-		fmt.Println(msg) //后台输出函数，打印面板
-		//fmt.Println("222")
-		//懒 现在输出的是msg的地址 如果想要好的输出那就解析一下map就好了，然后对每个地址求值输出
-		//我直接一股脑输出
 	}
 }
 
@@ -92,7 +33,7 @@ func main() {
 	c := cron.New()
 	var err error
 	cronEntryId, err = c.AddFunc(config.AppConfig.Cron, func() {
-		sendTemplateMessage()
+		sendTemplateMessage(createMsg())
 		log.Println("执行成功, 下次执行时间是", c.Entry(cronEntryId).Next.String())
 	})
 	if err != nil {
@@ -102,6 +43,38 @@ func main() {
 	log.Println("启动成功, 下次执行时间是", c.Entry(cronEntryId).Next.String())
 	//阻塞
 	select {}
+}
+
+func createMsg() string {
+
+	// todo: 备注
+	text, low, high := getWeather()
+	now := time.Now()
+	day := now.Format("2006-01-02")
+	weekday := time.Now().Weekday()
+	riqi := fmt.Sprintf("%s %s", day, weekday) // yyyy-mm-dd weekday
+	// 格式化生成的文字为Markdown形式
+	output := fmt.Sprintf(
+		"<span style='color:%s'>%s</span>\n\n"+
+			"天气：<span style='color:%s'> %s </span>\n"+
+			"最低温度：<span style='color:%s'> %s </span>\n"+
+			"最高温度：<span style='color:%s'> %s </span>\n"+
+			"今天是我们恋爱的第 <span style='color:%s'>%d</span> 天\n"+
+			"距离你的生日还有<span style='color:%s'>%d</span>天\n\n"+
+			"<span style='color:%s'>%s</span>\n\n"+
+			"<span style='color:%s'>%s</span>",
+		randomcolor(), riqi,
+		randomcolor(), text,
+		randomcolor(), low,
+		randomcolor(), high,
+		randomcolor(), getLoverDay(),
+		randomcolor(), getBirthDay(),
+		randomcolor(), getCaiHongPi(),
+		randomcolor(), getJinju(),
+	)
+
+	// 输出Markdown字符串
+	return output
 }
 
 /*
