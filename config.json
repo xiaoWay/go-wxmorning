@@ -1,20 +1,23 @@
 {
-  "mod": "production",
+  "mod": "test or prod",
   "cron": "30 7 * * *",
   "love_day": "2022-02-11",
   "birth_day": "05-06",
-  "wechat_official": {
-    "app_id": "",
-    "app_secret": "",
-    "open_ids": [
-      "",
-      ""
-    ],
-    "template_id": ""
-  },
+  
   "baidutianqi": {
     "ak": "",
     "district_id": ""
   },
-  "caihongpikey": ""
+  
+  "caihongpikey": "",
+
+  "wx_pusher": {
+    "app_token": "",
+    "uids": [
+    "",
+    ""
+    ],
+    "content_type": 3,
+    "summary": "老婆！早上好~~~~~~~"
+  }
 }
