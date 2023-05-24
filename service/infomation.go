@@ -70,12 +70,12 @@ func getJinju() string {
 }
 
 func getUrl() string {
-	key := "zzandxw/1.jpg"
-	url := GetDownload(key)
+	//key := "zzandxw/1.jpg"
+	url := GetDownload()
 	return url
 }
 
-//// 即将废弃 Bing图片
+// // 即将废弃 Bing图片
 //func getUrl() string {
 //	resp, err := http.Get("https://api.vvhan.com/api/bing?type=json")
 //	if err != nil {

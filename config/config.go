@@ -14,7 +14,7 @@ type Config struct {
 	WxPusher     WxPusher    `json:"wx_pusher"`
 	Baidutianqi  Baidutianqi `json:"baidutianqi"`
 	CaiHongPiKey string      `json:"caihongpikey"`
-	QiNiu        QiNiu       `json:"qiniu"`
+	Qiniu        Qiniu       `json:"qiniu"`
 }
 
 type WxPusher struct {
@@ -31,7 +31,7 @@ type Baidutianqi struct {
 }
 
 // qiniu
-type QiNiu struct {
+type Qiniu struct {
 	AccessKey string `json:"accesskey"`
 	SecretKey string `json:"secretkey"`
 }
