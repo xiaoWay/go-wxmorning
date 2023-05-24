@@ -69,6 +69,27 @@ func getJinju() string {
 	return fmt.Sprintf("%s \n %s", content, note)
 }
 
+func getUrl() string {
+	key := "zzandxw/1.jpg"
+	url := GetDownload(key)
+	return url
+}
+
+//// 即将废弃 Bing图片
+//func getUrl() string {
+//	resp, err := http.Get("https://api.vvhan.com/api/bing?type=json")
+//	if err != nil {
+//		fmt.Println(err.Error())
+//	}
+//	defer resp.Body.Close()
+//	data, err := ioutil.ReadAll(resp.Body)
+//	if err != nil {
+//		log.Println(err.Error())
+//	}
+//	url := gjson.GetBytes(data, "data.url").String()
+//	return url
+//}
+
 // 获取恋爱多少天
 func getLoverDay() int {
 	c, err := time.Parse("2006-01-02", config.AppConfig.LoveDay)

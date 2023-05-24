@@ -66,14 +66,18 @@ func InitMsg() string {
 	//riqi := fmt.Sprintf("%s %s", day, weekday) // yyyy-mm-dd weekday
 	// 格式化生成的文字为Markdown形式
 	output := fmt.Sprintf(
-		"<span style='color:%s'>%s</span>\n\n"+
+		"<h1 style='color:%s'><center>老婆早上好~~~~~\n\n</center></h1>"+
+			"<span style='color:%s'>%s</span>\n\n"+
 			"天气：<span style='color:%s'> %s </span>\n"+
 			"最低温度：<span style='color:%s'> %s </span>\n"+
 			"最高温度：<span style='color:%s'> %s </span>\n"+
 			"今天是我们恋爱的第: <span style='color:%s'>%d</span> 天\n"+
 			"距离你的生日还有: <span style='color:%s'>%d</span>天\n\n"+
 			"<span style='color:%s'>%s</span>\n\n"+
-			"<span style='color:%s'>%s</span>",
+			"<span style='color:%s'>%s</span>\n\n"+
+			"<span style='color:%s'>For Us</span>\n\n"+
+			"![image](%s)",
+		randomcolor(),
 		randomcolor(), riqi,
 		randomcolor(), text,
 		randomcolor(), low,
@@ -82,6 +86,7 @@ func InitMsg() string {
 		randomcolor(), getBirthDay(),
 		randomcolor(), getCaiHongPi(),
 		randomcolor(), getJinju(),
+		randomcolor(), getUrl(),
 	)
 
 	// 输出Markdown字符串

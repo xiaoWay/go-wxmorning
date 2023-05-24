@@ -14,6 +14,7 @@ type Config struct {
 	WxPusher     WxPusher    `json:"wx_pusher"`
 	Baidutianqi  Baidutianqi `json:"baidutianqi"`
 	CaiHongPiKey string      `json:"caihongpikey"`
+	QiNiu        QiNiu       `json:"qiniu"`
 }
 
 type WxPusher struct {
@@ -27,6 +28,12 @@ type WxPusher struct {
 type Baidutianqi struct {
 	Ak         string `json:"ak"`
 	DistrictId string `json:"district_id"`
+}
+
+// qiniu
+type QiNiu struct {
+	AccessKey string `json:"accesskey"`
+	SecretKey string `json:"secretkey"`
 }
 
 // 输出的默认配置
